@@ -1,0 +1,44 @@
+https://huke88.com/course/43005.html  redis学习教程
+
+hmset student name zhangsan sex nan  age 18   --设置多个key value  student 是结构名
+hmget  
+
+hexists stundent age  --查看哈希表stundent中 age字段是否存在
+
+hincrby stunden age 10  --给age加10，这个必须是整数
+hincrbyfloat  student age 10.00 --给浮点加值，必须是浮点数
+
+hset hash-key sub-key1 value1
+hset hash-key sub-key2 value2  --添加一个哈希值 key=sub-key2  值=value1
+
+hgetall hash-key  --查询出所有哈希值
+hlen    --获取哈希表中的字段数
+hdel   student age name  --删除哈希表中的字段
+hkeys  student --获取哈希表中的字段
+hvals   student --获取值
+hsetnx student name dd  --没有Name这个字段时会加进去
+hstrleng student name --返回哈希表中指定字段的长度
+
+hdel hash-key sub-key2  --删除key=sub-key2的这个值
+hget hash-key sub-key1  --获取sub-key1这个key的值
+
+ 
+List 类型 
+
+ lpush  list1 12
+lpush  list2 13  //从左边push两个元素进去
+rpop list1 从右边取一个出来，从左边push进去是先入先出法，所以这里出来的是 12
+llen list1 查看这个list有几个元素
+
+集合
+sadd  set1 12  --往集合中插入元素
+sadd  set1  13
+scard set1  --查询集合中有几个元素
+redis-cli  --启动客户端
+
+字符
+SET runoobkey redis
+GET runoobkey 
+
+expire string1 10 //设置过期时间为10秒
+ttl string1 //查询剩余过期时间

@@ -1,0 +1,23 @@
+func calc(index string, a, b int) int {
+	ret := a + b
+	fmt.Println(index, a, b, ret)
+	return ret
+}
+func main() {
+	a := 1
+	b := 2
+	defer calc("1", a, calc1("10", a, b))
+	a = 0
+	defer calc("2", a, calc1("20", a, b))
+	b = 1
+}
+最终输出
+10 1 2 3
+20 0 2 2
+2 0 2 2
+1 1 3 4
+不明白defer函数中调函数为什么第一个defer中的calc会先输出,defer运行规则不是从下往上的吗
+
+
+
+gorm  嵌套结构切片

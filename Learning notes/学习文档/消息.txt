@@ -1,0 +1,63 @@
+1xx - 信息提示 
+这些状态代码表示临时的响应。客户端在收到常规响应之前，应准备接收一个或多个 1xx 响应。 • 100 - 继续。 
+2xx - 成功 
+这类状态代码表明服务器成功地接受了客户端请求。 • 200 - 确定。客户端请求已成功。
+3xx - 重定向 
+客户端浏览器必须采取更多操作来实现请求。例如，浏览器可能不得不请求服务器上的不同的页面，或通过代理服务器重复该请求。
+4xx - 客户端错误 
+发生错误，客户端似乎有问题。例如，客户端请求不存在的页面，客户端未提供有效的身份验证信息。 • 400 - 错误的请求。 
+5xx - 服务器错误 
+服务器由于遇到错误而不能完成该请求。 • 500 - 内部服务器错误。 • 500.12 - 应用程序正忙于在 Web 服务器上重新启动。
+
+https://blog.csdn.net/sinat_35406909/article/details/103818364
+https://blog.csdn.net/weixin_34128839/article/details/94488565
+https://www.jishuchi.com/read/go-interview/3435
+https://blog.51cto.com/u_15102959/2637222
+https://www.it610.com/article/1279443536516759552.htm
+https://www.codercto.com/a/39119.html    100
+https://blog.csdn.net/itcastcpp/article/details/80462619  100  96       70题没明白
+
+要温习的
+65题  85  86  87 89  91  93  94  96  98 103
+
+填空 2 ，填空7  8  10  32  70
+
+判断 4  6  16 22  24  44
+
+父级接口可以直接接收子级成员的实体
+
+
+输出题  19，20
+
+iota
+goto 不能跳到其他函数或内层代码
+
+基于一个类型创建一个新类型，称之为defintion；基于一个类型创建一个别名，称之为alias。 MyInt1为称之为defintion，虽然底层类型为int类型，但是不能直接赋值，需要强转； MyInt2称之为alias，可以直接赋值。
+
+
+
+
+//定义只读的channel
+read_only := make (<-chan int)
+ 
+//定义只写的channel
+write_only := make (chan<- int)
+
+
+
+////////////////// Golang支持反射，反射最常见的使用场景是做对象的序列化（）
+
+看到 14.是否可以编译通过？如果通过，输出什么？
+
+go test工具对自己的代码进行单元测试
+
+gomock
+goconvey
+go vet
+gosub  101 题
+
+strings.TrimSpace
+if strings.Index(aa,");") < 0{  //排除变量
+		return ""
+	}
+strings.TrimSpace( strings.Replace(aa,"static","",-1))

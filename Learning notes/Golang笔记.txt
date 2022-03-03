@@ -1,0 +1,17 @@
+视频地址：https://www.bilibili.com/video/BV1ZU4y1W72B?p=38
+1、select 选择管道使用
+for {
+    fmt.println('...监听中...')
+    select {
+	case data1 := <-chan1:
+		fmt.println("读取 chan1 管道的数据")
+	case data2:= <-chan2:
+		fmt.println("读取 chan2 管道的数据")
+	default:fmt.println("等待监听。。。")
+     }
+
+}
+
+
+alter+enter 键自动导入要引用的包
+方法后面加.VAR可以自动补全返回值

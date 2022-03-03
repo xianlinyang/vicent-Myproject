@@ -1,0 +1,13 @@
+1、如果查询字段不是按最左匹配原则那么也会使用到 索引但远远没有按最左匹配原则的效率高，
+     比如：a，b，c三个字段是一个联合索引那么
+     select  * from table where b =1 没有 select * from table where a=1 and b=1 效率高
+
+2、如果索引字段是字符型  那么前缀匹配用的是索引，中坠和后缀用的是全表扫描。
+     select * from staffs where id like 'A%';//前缀都是排好序的，使用的都是联合索引 select * from staffs where id like '%A%';//全表查询 select * from staffs where id like '%A';//全表查询
+
+3、select*from table where a<4 and c >5
+     由于不遵循最左匹配原则，且a<4的值有很多导至c是无序的所以没使用到 索引
+    select*from table where a<2 and c >5
+     由于不遵循最左匹配原则，但a<2的值只有一条c就变成了有序的所以使用到了索引
+4、select * from table where a=1 and c>5 
+     由于搜索中有id=1，所以在id范围内age是有序的，所以只使用了联合索引中的id索引。

@@ -1,0 +1,99 @@
+教程：Kubernetes (K8S) 3 小时快速上手 + 实践，无废话纯干货    //  https://www.bilibili.com/video/BV1Tg411P7EB?p=4
+     课件地址：https://k8s.easydoc.net
+
+kubectl apply -f ./pod.yaml  通过yaml文件创建pod
+    也可以写成deployment文件来创建很多的pod，设置好文件后创建命令是一样的     
+    
+kubectl get pod -0 wide  可以看每个pod的ip    
+#查看Pod详情
+kubectl describe pod pod-name          
+#查看log
+kubectl logs pod-name         //日志后面加-f 就是持续看
+#进入Pod容器终端 -c container-name 可以指定进入哪一个容器
+kubectl exec -it pod-name -- bash
+#把集群内端口映射到节点
+kubectl port-forward pod-name 8990:8080      //
+#删除部署
+kubectl delete deployment test-k8s
+#调整副本数量
+kubectl scale deployment test-k8s --replicas=10          
+#查看历史版本
+kubectl rollout history deployment test-k8s
+#回退到上个版本
+kubectl rollout undo deployment test-k8s
+kubectl rollout undo deployment test-k8s --to-revision=1  //指定回到版本1
+
+kubectl get all //列出所有东西
+
+kubectl rellowt restart deployment test-k8s   //重新部署下
+##给deployment重新设置一个镜像
+kubectl set image deployment test-k8s test-k8s=ccr.ccs.tencentyun.com/k8s-tutorial/test-k8s:v2-mith-3rror --record   //test-k8s是容器名字，record表示会把这个命令记录到历史记录里去
+##
+暂停运行
+kubectl rollow pause deployment test-k8s
+kubectl rollowt resume deployment test-k8s //恢复
+##输出到一个文件
+kubectl get deployment test-k8s -o yaml   //把查看的信息输出到 一个文件
+#删除全部资源
+kuebctl delete all --all
+
+
+在yaml创建文件里可以把一个pod指定到一个节点里去运行
+nodeSelector:
+  disktype: ssd     //指定到ssd这个节点里去运行
+  
+  
+  
+service  
+访问时是通过service 访问到pod  ，负载均横在service里
+直接连接service，service会自己去找pod连接，找也是随机找的
+如果要直接连接pod,那么用Podname.servicename 这样的方式来连接
+创建service也是用yaml。只是kind：service,设置下端口：port :service暴露胡端口  targetport:容器的端口  
+
+##查看service
+kubectl get service
+kubectl get svc   也是一样
+kubectl describe svc svc-name   查看地详情
+
+service yaml里的type:字段默认是 ClusterIP (集群内可访问)  NodePort(节点可访问)  LoadBalancer (负载均衡模式，需要负载均衡器才可以使用) 
+
+进入到pod内部可以用 curl http://test-k8s:8080   //来测试service(test-k8s) 能不能访问
+
+
+StatefulSet
+kubectl get Statufulset
+
+
+
+数据的持久化
+
+kubectl rollout restart statefulset monodb   //重新创建mongodbs
+
+kubectl get sc    --查看storeageclass  //创建本地存储要先建这个
+kubectl get pv    --查看Pv      第二次创建
+kubectl get pvc   --查看Pvc
+最后再创建mongodb  
+再用kubectl get pvc 看看status字段是不是绑定起来的
+mongodb里的配置也是关连的
+
+
+
+配置文件实现
+kubectl get configmap      //查看配置文件名称
+kubectl get configmap mongo-config -o yaml //查看里面的内容  ,mongo-config 是自已定义的配置文件的名称
+
+secret  //查看一些密码文件,里面的数据要用base64编码
+kubectl get secret mongo-secret -o yaml 
+
+kubectl exec -it sfsdfds -c sss  //pod里有两个容器就用-c来指定进哪个容器
+echo  $aaa  //输出aaa这个环境变量的值    $PATH  就是输出所有环境变量
+
+kubectl get all   //pod service那些都一起查看
+
+
+helm   //是一些K8s写好的软件，可以直接拿来用
+helm ls  //查看已经安装的所有helm软件
+helm delete aaa
+
+
+腾讯云怎么用，在上面用k8s,怎么关联到本机

@@ -1,0 +1,82 @@
+先载入docker成功后
+docker load < flanneld-v0.12.0-amd64.docker
+然后再次运行
+
+kubectl apply -f kube-flannel.yml
+
+
+
+
+k8s更改master的ip地址
+https://blog.csdn.net/oGuiGui12345/article/details/106238923
+
+
+
+
+
+
+
+
+
+kubernetes更换IP地址重新初始化master节点
+
+玩代码 2020-05-20 16:31:55  2518  收藏 8
+分类专栏： k8s 文章标签： k8s
+版权
+
+k8s
+专栏收录该内容
+2 篇文章0 订阅
+订阅专栏
+第一步分别修改master、node1、node2节点的网段ip地址
+vi /etc/sysconfig/network-script/ifcfg-ensxxx
+
+修改成相同的网段地址
+
+第二步分别修改master、node1、node2节点的hosts映射地址
+vi /etc/hosts
+
+修改成对于应的节点地址
+
+第三步重启网卡
+systemctl restart network (ChentOS7)
+
+第四步删除/etc/kubernetes/文件夹下的所有文件、删除$HOME/.kube文件夹、删除/var/lib/etcd文件夹、并关闭防火墙
+rm -rf /etc/kubernetes/*
+
+rm -rf ~/.kube/*
+
+rm -rf /var/lib/etcd/*
+
+systemctl stop firewalld 
+swapoff -a
+
+第五步重置节点
+kubeadm reset
+
+第六重新初始化master节点
+kubeadm init \
+--apiserver-advertise-address=192.168.80.140 \
+--image-repository registry.aliyuncs.com/google_containers \
+--kubernetes-version v1.15.0 \
+--service-cidr=10.1.0.0/16 \
+--pod-network-cidr=10.244.0.0/16
+
+第七步把初始化后得到的token，node加入master节点
+
+
+kubeadm join 192.168.80.140:6443 --token y6d4n8.z562c4bpypp8xee8   --discovery-token-ca-cert-hash sha256:eaa6c985e69521e5c12280d6a4723ff4c3bd22d0dbd28cfaadec1c57fbc3e7fb
+
+第八步安装Flannel
+sysctl net.bridge.bridge-nf-call-iptables=1
+wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+# 修改docker镜像地址
+sed 's/quay.io\/coreos/registry.cn-beijing.aliyuncs.com\/imcto/g'
+# 安装flannel
+sudo kubectl apply -f kube-flannel.yml
+
+各节点准备就绪
+
+————————————————
+版权声明：本文为CSDN博主「玩代码」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/oGuiGui12345/article/details/106238923

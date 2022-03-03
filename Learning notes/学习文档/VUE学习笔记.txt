@@ -1,0 +1,98 @@
+vue 2 npm run dev
+         
+         npm run serve
+
+VUE运行步骤   index.html ->main.js-app.vue
+
+scope:CSS中加入这个每个组件的CSS互不影响
+
+vue传值：父组件向子组件传值  在21课  （父组件写：<users v-bind:user="users></Users>  在子组件users中的 props:['user'] 这样子组件就能用user这个值了这就是父组件传过来的
+                                                                最好还是这样写：props:{ users:{type:array,require:true}}）  -- 这种是传引用，一改全改，传值的话用 string或是boolean格式都是传值，而且子组件接收是不需要写require
+                子组件传给父组件：changetitle{  this.$emit("titlechange","子向父组件传值") } // 子组件注册了一个事件,当子组件触发了changetitle后会注册一个这样的事件，再去找父组件这个事件的实现最终把值传过去实现子向父传值
+                                              父组件要写V-ON:titlechange="updatetitle($event)",父组件再写个methods{updatetitle(title){在这里面写改变内容}}
+
+
+输入法:Ul>li  他就会出一个ul和li的全部
+添加事件阻止刷新页面：v-on:click.prevent="prosave"
+
+https://jsonplaceholder.typicode.com/
+
+<hr> 这个标签是换行的意思，有一个横线
+
+路由参数：path:"/blog/:id"  这就有一个ID参数
+
+快速输入：h1.page-header{添加用记} ->回车  ，出来的效果就是：<h1 class="page-header">添加用户</h1>
+
+属性: placeholder="Search W3School"  做出来的控件有个描述信息 Search W3School
+
+sumblit提交方法里阻止默认事件：e.preventdefault();
+
+VUe 跳转页面：this.#router.push({path:"/"}) 跳转到主页
+
+vuex官网：https://vuex.vuejs.org  ->进入简体中文
+                 需要安装 vue
+                 
+                 vuex安装在 09 -使用computed获取store数据中，安装VUE.JS DEVTOOLS 在 09-vuex-actions中
+
+
+bootstrap用法：进入官网有个快速入门 -》有个compents里面有对应的组件的css具体该怎么用
+
+                                                        路由用法
+<router-link tag="div"></router-link>  加了tag后会把这个router-link改成DIV标签，默认是A标签
+<router-link :to="homeLink"> 这里面的homelink可以用变量的形式存放
+
+{path:'*',redirect:'/'} 如果什么路径都没匹配那么跳转到根路径中
+
+this.$router.go(-1)  //跳转到上一次浏览的页面
+this.$router.replace('/menu')  //固定跳转到menu地址上去
+
+this.$router.replace({name:'menulink'}) //按路由名字跳转
+
+this.$router.push('/menu')  //也是跳转到menu里面来，这里面也可以向上面一样用名字
+
+<div class="" ref="menuscroll">  //想单独拿到这个DIV元素就用REF 
+使用的放：this.$refs.menuscroll 就可以拿到了
+
+let foodlist = this.$refs.foodscroll.getElementsByClassName("food-list-hook")  //这样可以拿到所有 class="food-list-hook" 的LI,然后再做操作
+    foodlist返回的是一个列表，里面是全部拿到的li
+    for (i=0;i<foodlist.length;i++){
+	height += item.clientheight //这里的item 就是每一个li ,这个clientheight就是可视高度
+    }
+ //这个方法是dom已经更新后才会调里面的方法，就算是放在create里也没事
+this.$nextTick(()=>{
+	this.initscroll()
+                this.calculateheight()
+})
+
+
+vscode 操作
+    mkdir src/components/shopcart    --创建一个文件夹
+    touch src/components/shopcart/shopcart.vue  //创建一个vue文件  
+
+
+二级、三级路由：
+
+第11 -3章
+
+
+美团项目
+https://icomoon.io/app/#/select
+
+mkdir src/components/header  //创建文件夹，可以带空格连续打多个，打出来也是一起创建
+touch  src/components/header/header.vue  //创建vue文件
+
+
+在DIV里遍历出来的food也可以直接传到子组件中去，不用再重新申明变量
+
+// vue 给Json 加属性
+//先导入vue包
+import vue from 'vue';
+vue.set(this.food,"count",1)  //给food再加一个属性
+
+
+//vue 父级组件调用子组件里面的方法
+<app-product-detail :food="selectfood"  ref="foodview"></app-product-detail>  // :food是子组件里的参数
+this.$refs.foodview.showview()  //这样可以调用<app-produce-detail 这个组件里的showview()这个方法
+
+//vue阻止冒号事件
+@click.stop.prevent="increasecart"  //这样绑定事件会阻止冒号事件

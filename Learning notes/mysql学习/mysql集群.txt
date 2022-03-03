@@ -1,0 +1,8 @@
+MySQL大型分布式集群
+https://www.bilibili.com/video/BV18J411g7Rg?p=5  学习视频
+
+主从复制：从库通过监控主库的binlog日志来同步数据
+8-9 ：创建集群用户： create user 'username'@'192.168.1.%' identified by 'repl'        --repl是密码
+select user,host from mysql.user\G;   --查用户
+drop user repl@'192.168.1.%'  --删除用户
+grant privilege_name on *.* to 'username'@'host' indentifield by 'password'    --受 privilege_name权限,*.*是所有库所有表

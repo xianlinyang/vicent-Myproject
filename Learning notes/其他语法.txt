@@ -1,0 +1,2 @@
+set goarch=386  设为32位EXE
+ 

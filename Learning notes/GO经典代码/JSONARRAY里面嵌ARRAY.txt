@@ -1,0 +1,130 @@
+func (c *Youzhan_Controller) SetSpinfo(){
+	var req map[string]interface{}
+	//var skey string
+	var spys string
+	var spcm string
+	var objyscm interface{}
+	var i int64
+	response := make(map[string]interface{})
+
+	defer func(){
+		if err :=recover();err !=nil{
+			response[utils.R_Code] = utils.FailedCode
+			switch err.(type) {
+			case error:response[utils.R_mesg] = err.(error).Error()
+			default:
+				response[utils.R_mesg] = err.(string)
+			}
+			utils.LogOut("info", "发生错误", response[utils.R_mesg].(string))
+			c.Data["json"] = response
+			c.ServeJSON();
+		}
+
+	}()
+
+	err := json.Unmarshal(c.Ctx.Input.RequestBody,&req)
+	if err != nil{
+		panic("参数获取出错，"+err.Error())
+	}
+
+
+	reqstr,err := json.Marshal(req)
+	if err != nil{
+		panic("参数解析出错，"+err.Error())
+	}
+	utils.LogOut("info", "条码信息列表获取", string(reqstr))
+
+	strjson,err := simplejson.NewJson([]byte(reqstr))
+	if err != nil{
+		panic("参数json转换出错，"+err.Error())
+	}
+
+	customid := utils.InterfaceToString(req["customid"])
+	sql_inser := " insert into yz_spxx(customid,skuid,code,color,size,itemid,price,stocknum,ordernum,sendnum,soldnum,esalespxxid,json,createtime,doflag) "+
+				 " values(?,?,?,?,?,?,?,?,?,?,?,-1,?,getdate(),0) "
+	sql_count := " select id from yz_spxx where skuId =?"
+
+	rows,err := strjson.Get("skulist").Array()
+	if err != nil{
+		panic("商品列表获取出错,"+err.Error())
+	}
+ 
+	var sparry interface{}
+	for _,row := range  rows{
+		if each_map,ok := row.(map[string]interface{});ok{
+			sparry = nil
+			i = 0
+			for _,v := range each_map{ //这里面只有一个KEY参数,所以只取第一个值
+				//skey := key
+				if i > 0{
+					break
+				}
+				sparry = v
+				i++
+			}
+
+			for _,row_sp := range sparry.([]interface{}){
+				if each_map_sp,ok := row_sp.(map[string]interface{});ok{
+					s := utils.InterfaceToString(each_map_sp["combinSku"])
+					fmt.Println(s)
+					if utils.InterfaceToString(each_map_sp["combinSku"]) != "0"{
+						continue
+					}
+
+					sjson,_ := json.Marshal(each_map_sp)
+					utf8spjson,_ := url.QueryUnescape(string(sjson))
+					icount,err := services.GetSqlCount(sql_count,utils.InterfaceToString(each_map_sp["skuId"]))
+					if err != nil{
+						panic("条码重复检查失败,"+err.Error())
+					}
+					//"sku": "[{\"k\":\"尺码\",\"k_id\":12,\"values\":{\"34\":\"M\",\"4\":\"L\",\"199\":\"XL\"}},{\"k\":\"颜色\",\"k_id\":1,\"values\":{\"10\":\"红色\",\"187\":\"白色\"}}]"
+					// 获取颜色尺码
+					spys = ""
+					spcm = ""
+					yscm :=  utils.InterfaceToString(each_map_sp["sku"])
+					//if err != nil{
+					//	panic("获取颜色尺码出错"+err.Error())
+					//}
+					err = json.Unmarshal([] byte(yscm),&objyscm)
+					if err != nil{
+						panic("颜色尺码JSON解析出错，"+err.Error())
+					}
+					for _,spycm := range objyscm.([]interface{}){
+						if spyscm_map,ok := spycm.(map[string]interface{});ok {
+							if utils.InterfaceToString(spyscm_map["k"]) == "尺码" {
+								spcm = utils.InterfaceToString(spyscm_map["v"])
+							}
+							if utils.InterfaceToString(spyscm_map["k"]) == "颜色" {
+								spys = utils.InterfaceToString(spyscm_map["v"])
+							}
+						}
+					}
+					if icount ==0{
+						_,err = services.FX_db.Insert(sql_inser,
+								customid,
+								utils.InterfaceToString(each_map_sp["skuId"]),
+								utils.InterfaceToString(each_map_sp["code"]),
+								spys,
+								spcm,
+								utils.InterfaceToString(each_map_sp["itemId"]),
+								utils.InterfaceToString(each_map_sp["price"]),
+								utils.InterfaceToString(each_map_sp["stockNum"]),
+								utils.InterfaceToString(each_map_sp["orderNum"]),
+								utils.InterfaceToString(each_map_sp["sendNum"]),
+								utils.InterfaceToString(each_map_sp["soldNum"]),
+							    utf8spjson)
+						if err != nil{
+							panic("插入失败,"+err.Error())
+						}
+					}
+				}
+			}
+
+		}
+	}
+
+	response[utils.R_Code] = utils.SuccessCode
+	response[utils.R_mesg] = "操作成功!"
+	c.Data["json"] = response
+	c.ServeJSON();
+}

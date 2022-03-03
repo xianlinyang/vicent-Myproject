@@ -1,0 +1,7 @@
+https://www.bilibili.com/video/BV1cK4y1L7Am?p=8  黑马程序员Kubernetes（K8S）教程，容器集群管理系统教程从入门到精通（新版）
+
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 192.168.1.188:6443 --token 7shmgj.yahdo65lplnilajy \
+    --discovery-token-ca-cert-hash sha256:d4fde7579c7f1db44b2e811648f3ebb946f9d0f302de624469fbf4c566d3ac15

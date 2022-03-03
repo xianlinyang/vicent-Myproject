@@ -1,0 +1,10 @@
+环境变量设置代理  GOPROXY
+建一个包 
+go env          检查环境变量
+go evn -w     设置环境变量
+go mod init   初始化GOMODEL
+go mod tidy   所有包整理，并安装需要的依赖包
+
+
+进入项目目录
+go mod init  项目名称  ，， 在当前目录下不输入项目名称也可以

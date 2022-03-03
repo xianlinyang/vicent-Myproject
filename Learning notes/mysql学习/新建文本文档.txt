@@ -1,0 +1,18 @@
+表引擎作用
+MyISAM适合：(1)做很多count 的计算；(2)插入不频繁，查询非常频繁；(3)没有事务。
+
+InnoDB适合：(1)可靠性要求比较高，或者要求事务；(2)表更新和查询都相当的频繁，并且表锁定的机会比较大的情况。
+
+登陆命令
+mysql -u root -p
+
+开启普通日志
+set global general_log = on;
+查询日志开关
+show global variables like '%log%'
+
+服务重启
+net stop mysql
+net start mysql --服务启动  --cmd可以直接运行但是要用管理员身份
+
+desc  table   --查看表结构命令

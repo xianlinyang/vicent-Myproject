@@ -1,0 +1,51 @@
+var obox = document.queryselector('.box');  //找到class = box 的元素
+alter(obox.offsetwidth) //弹出它的宽度
+
+盒子模型加Pading,或是border盒子都会变大
+box-sizing:content-box; //普通的盒子模型，会变大，向外扩展
+                  border-box  //盒子模型整体不变大，向内扩展
+
+float:left  //会横向排
+
+transform:translate(-50%,-50%);//水平垂直居中
+
+margin-left:左外边距
+PADDING:内边距
+
+不可原谅 ，要了我的命，不喜欢别人强暴我，本人坑本人
+
+
+弹性布局  ---父级
+1、父级加  display:flex
+*  如果用了弹性布局，子元素不需要浮动 float,加了也没用
+     justify-content: center  子元素水平排列方式,
+              center表示居中 
+              flex-start,居左，
+              flex-end 居右，
+             space-bettween:两端对齐
+             space-around:子元素拉手分布
+    align-items: 子元素的垂直排列
+             center  :居中
+             flex-start:顶部
+             flex-end：底部
+    flex-direction:  排列方式
+            row :横向排列
+            row-reverse:横向翻过排列，到差排
+            COLUMN:纵向排列
+            column-revers:纵向翻过排列	
+    flex-wrap: 包裹属性，子元素是否在一行显示
+            nowrap:不换行（默认值)
+            wrap:包裹，换行
+    align-content:多行的时侯垂直排列 
+            center:居中
+    flex-flow:
+
+         --- 子级
+        flex:1  //表示平分宽度，1指系数，总共把父级宽度分几份他占几分之几 ，
+      *子元素在钊分父元素宽度时先去除固定宽度再去分 
+       flex-grow:1;// 6-7平均分配   定义子元素放大比例，视频第31分钟
+       align-self:flex-start 子级单独用来覆盖父级的align-items的排列的
+       order: 0,规定子元素的顺序数字越小越靠前，让最后的8排到前面
+position:fixed;  // fixed是固定定位
+left:0;
+bootom:0;  //停在底部

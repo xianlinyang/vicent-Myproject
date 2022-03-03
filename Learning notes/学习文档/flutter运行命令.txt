@@ -1,0 +1,10 @@
+flutter run   --运行
+r    热加载
+p   显示网格
+o   切换adroid,ios预览模式
+q   退出调式预览模式
+
+
+
+cupertino_icons: ^0.1.2
+dio: ^2.0.7

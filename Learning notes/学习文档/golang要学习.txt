@@ -1,0 +1,7 @@
+栈说明，堆是什么
+stw是什么
+
+
+https://www.bilibili.com/video/BV1qT4y1c77u?from=search&seid=10234517476414890933  //明天要学
+
+golang groutine调度机制

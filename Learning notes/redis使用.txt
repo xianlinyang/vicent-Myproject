@@ -1,0 +1,19 @@
+redis-server.exe redis.windows.conf  --启动redis
+redis-cli.exe -h 127.0.0.1 -p 6379   --进入redis
+
+
+redis> SET cache_page "www.google.com"
+OK
+
+redis> EXPIRE cache_page 30  # 设置过期时间为 30 秒
+(integer) 1
+
+redis> TTL cache_page    # 查看剩余生存时间
+(integer) 23
+
+redis> EXPIRE cache_page 30000   # 更新过期时间
+(integer) 1
+
+redis> TTL cache_page
+(integer) 29996
+ 

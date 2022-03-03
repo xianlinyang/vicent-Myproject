@@ -1,0 +1,138 @@
+docker pull registry
+
+docker run -d -v /opt/registry:/var/lib/registry -p 5000:5000 --restart=always --name registry registry
+  ------------------------/opt/registry  --是镜像存储路径， -p：端口 --restart=always 挂掉重启 --name 名称              //////这个是建立开放式仓库，不需要用户名和密码的
+  
+docker ps
+docker ps -l  --------------------------看最新启动的这个
+
+
+curl http://192.168.31.71:5000/v2/_catalog
+-------测试有没有搭通
+
+
+
+docker rm -f registry   -----删 除
+
+docker tag busybox 192.168.31.71:5000/busybox:v1    --将busybox镜像打上tag标记，标记到一个仓库，v1是打上的tag
+
+docker push 192.168.31.71:5000/busybox:v1   //把镜像推送到镜像仓库
+
+拉取的时侯：docker pull 192.168.31.71:5000/busybox:v1    //这样瞬间就能拉下来
+
+镜像仓库登录名：YXL    1234
+
+
+docker rmi -f <imageid>  删除镜像
+
+firewall-cmd --list-port  查看防火墙放行的端口
+firewall-cmd --add-port=5000/tcp --permanent   永久放行一个端口
+
+
+              
+https://www.cnblogs.com/nulige/articles/10926088.html    //镜像操作在这里面有
+https://www.cnblogs.com/niceyoo/p/13058238.html   这个是搭建私有镜像仓库，这个是私有公开仓库不需要密码的
+
+
+ ***********************************************************2022-02-24 docker搭建 harbor仓库 和golang 打包镜像到docker 的例子**************************
+
+docker run -d --name busybox2 busybox   //启动一个容器
+docker logs 3534543    //看一个容器日子
+docker ps -a
+
+https://www.bilibili.com/video/BV1c5411a7cQ?from=search&seid=15849465911281718252&spm_id_from=333.337.0.0   //学习视频
+
+
+https://xy-1257362739.cos.ap-nanjing.myqcloud.com/harbor-offline-installer-v2.3.3%20%281%29.tgz
+
+
+https://blog.csdn.net/weixin_38920212/article/details/101282206  dockerharb安装
+https://www.bilibili.com/video/BV1zQ4y1D7Ju?from=search&seid=15849465911281718252&spm_id_from=333.337.0.0    //安装视频
+
+注意：安装完harbor后docker重启后 docker ps -a 中看harbor容器没起起来的要手动 docker start 2523 启动起来
+
+harbor登录  http://192.168.96.131:8081   admin  Harbor12345
+
+
+docker login 192.168.96.131:8081       docker登录镜像仓库
+
+harbor中建一个项目 test
+
+// 打标签
+docker tag nginx:v1.0 192.168.96.131:8081/test/nginx:1.0     //test是项目名称
+
+//推镜像
+docker push 192.168.96.131:8081/test/nginx:1.0
+
+//拉镜像
+docker pull 192.168.96.131:8081/test/nginx:1.0
+
+
+
+golang打包镜像
+https://hub.docker.com/_/golang     ----golang的镜像网站
+docker pull golang:1.15.7-alpine3.13
+
+
+----Dockerfile
+FROM golang:1.15.7-alpine3.13
+WORKDIR /go/src
+ADD ./go/src
+RUN cd /go/src && go build -0 main
+CMD ["/go/src/main"]
+
+
+
+FROM golang:1.15.7-alpine3.13 AS buildStage
+WORKDIR /go/src
+ADD ./go/src
+RUN cd /go/src && go build -o main
+
+FROM alpine:latest
+WORKDIR /app
+COPY --from=buildStage /go/src/main /app/
+EXPOSE 8085
+ENTRYPOINT ./main
+
+
+docker image build -t komago:v02 .
+docker images ls
+docker run -t --rm komago:v02
+docker run -p 8085:8085 hello_world:v03     //这种是带端口映射的运行，不带端口映射不能访问docker里的程序
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+kubectl -n default create busybox docker-registry registry-key \
+--docker-server=192.168.31.71:5000 \
+--docker-username=YXL \
+--docker-password=1234 \
+--docker-email=12563478@qq.com
+
+
+
+kubectl create secret docker-registry regcred \
+  --docker-server=192.168.31.71:5000 \
+  --docker-username=YXL \
+  --docker-password=1234 \
+  --docker-email=12563478@qq.com
+  
+  kubectl get secret regcred --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
+  
+  {"auths":{"192.168.31.71:5000":{"username":"YXL","password":"1234","email":"12563478@qq.com","auth":"WVhMOjEyMzQ="}}}[root@MiWiFi-R4CM-srv k8s]#

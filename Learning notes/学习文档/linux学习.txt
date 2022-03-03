@@ -1,0 +1,296 @@
+创建文件前加sudo 可以获取超级用户权限要输密码
+terminal--是终端
+ifconfig 查询系统Ip
+
+sudo apt install net-tools  --安装网络配置
+sudo ufw status --查询防火墙开启状态
+xshell6  是linux远程调用工具
+xftp-6.0.0105p.exe
+
+http://linux.51yip.com/   //linux命令手册
+
+
+磁盘管理：
+cd  切换目录  cd  .. 退到上一格
+ls    查看当前文件夹信息
+ll     列详线信息
+pwd  我当前在哪个文件夹下
+在linux管/叫根
+cd / 回到根相当于我的电脑一样  
+~代表root文件夹
+
+ls 查出来的文件名称绿色代表的是快捷方式，普通的代表是文件夹
+ll 详细信息 主要看第一个字符 -表示普通文件，l表示快捷方式 ,d是文件夹
+如果直接输入cd /u 如果当前目录下面只有一个u开头的文件直接按tab键系统会自动补全录入，
+如果有多个文件敲tab时会显示目录名称
+
+clear  清屏  ctrl+l 也是
+创建目录命令     mkdir
+mkdir 02
+mkdir 02 03  --批量创建两个文件夹
+echo "abc" > v.txt  --建一个v的文本文件，表示把abc这个字符串输出到v的文本文件中
+cat  v.txt   查看文件中的内容
+
+删除文件或是文件目录 rm 
+rm v.txt 删除这个文件
+rm -f v.txt  不询问删除
+rm -rf test01  删除test01文件夹
+rm -rf a b 批量删除文件夹 
+
+复制文件  cp,cp -rf
+cp aa.txt aa2.txt  把aa.txt复制成aa2.txt
+cp  -rf aa  bb      复制文件夹aa新生成bb
+
+查看文件全部内容  cat
+可以查看当前文件夹下的文件
+cat /usr/local/aa.txt  也是可以
+
+
+vi  aa.txt   可以批量编辑
+
+分页查看文件内容  more
+more aa.txt  然后一直敲回车就一行一于展示信息   敲空格 一次翻一页
+head -n  查看文件开头几行信息 默认是10行
+head aaa.txt   ,head aaa.txt -n 12  看12行
+tail -n  看文件结尾  默认也是10 行
+
+文件内搜索  grep
+grep java ccc.txt   从ccc.txt中搜索java的关键字的数据，默认区分大小写，是模糊匹配
+grep -i  java ccc.txt  表示不区分大小写
+grep "java is" ccc.txt  如果搜索文本中有空格要加引号
+grep -w java ccc.txt  搜索是独立整个单词的数据
+grep "^java" ccc.txt 搜索以java开头的数据  ^[0-9][a-z][A-Z]$ 正则以^开头$结尾
+grep  java ccc.txt aaa.txt 在多个文件中搜索
+
+使用管道 “|”，将左边的输出项当作输入项
+cat aa.txt | grep java   在读取出来的信息中搜索java
+
+系统命令
+
+date  显示当前时间
+su    切换用户
+   su  yxl   切换到yxl用户，如果是超级管理员是#号普通用户是$
+
+重启系统  reboot
+关机 shutdown -h now
+查看系统进程 ps -ef
+pid 是进程id关进程用这个id
+
+杀进程  kill 
+kill 1  表示杀pid值对应的进程
+
+
+压缩、解压
+tar 压缩（归档）
+  z:使用压给它生成的文件名是xxx.tar.gz是Linux中常用的压缩格式
+  c:创建压缩文件
+  x:解压缩
+  v:显示压缩，解压过程中处理的文件名
+  f:指定归档文件名，tar参数后面是归档文件名
+  t：列出归档文件内容，查看文件内容
+
+压缩
+   tar -zcvf
+
+解压缩
+  tar -zxvf
+
+c:解压到指定目录,使用方式 -C 目录，C是大写
+
+tar -zcvf  txtfile.gar.gz aa.txt  bb.txt 压缩aa.txt成新文件名 txtfile.gar.gz
+tar -zcvf aa.gar.gz  dd  压缩目录
+
+tar -tf aa.gar.gz  --查看压缩文件里有哪些文件
+
+tar -zxvf aa.gar.gz   --直接解压到当目录目
+
+tar -zxvf jdk-8u121.gar.gz -C /usr/local/aa   --将文件解压到/usr/local/aa的文件夹下
+
+
+网络通讯
+ifconfig  查看ip信息
+ping  测试网络连接  ping www.baidu.com
+
+
+网络访问
+curl  www.baidu.com   --抓取百度源码
+
+
+
+wget  下载资源工具
+语法 wget  下载资源地址   最好用windows下好后放到 Linux kh 
+
+
+
+权限管理
+执行 ll 或ls-l显示文件的详细信息
+
+-rwxr-xr-x
+第一个三位：读写执行
+第二个三位：所属用户组
+第三个三位：其他
+
+1可执行 2可写 4可读
+644 自已可写可读，其他人只可读
+755 自已可读可写，其他人可执行可读
+777 所有有都可读可写
+
+权限设置，修改文件权限chmod
+chmod  606 aa.txt  设置自已可读可写，用户组不行，其他用户也是可读可写
+
+修改文件的拥有者 chown
+chown yxl aa.txt  把aa.txt文件所有者给yxl用户
+
+
+管道和重定向
+echo  "aaa"  输出一个字符串
+echo "aaa" > t1.txt 把这个字符输出到 一个文件里，有文件会复盖原文件，没有会创建
+echo "aaa" >> t1.txt 不复盖原文件，向后追加
+
+
+管道
+管道就是用“|”连接两个命令，以前面一个命令的输出作为后面命令的输入
+
+
+ps -ef | grep java   --从进程中搜带java的进程
+
+
+vi 和vim编辑器
+vi  文件名  ，如果文件存在就打开文件，是编辑纯字符的文本编辑器
+
+vi abc.txt 
+按 a或者i 或是insert  点完后就能编辑，保存时按esc  再输入 :wq 再回车，不保存退出 :q!
+
+命令：
+dd:删除光标所在行
+yy:复制光标所在行到 缓冲区
+p:粘贴缓冲区中的内容
+gg:光标回到文件第一行
+GG:光标回到 文件最后一行
+^:光标移动至当前行的行首
+$:光标移动至当前行的行尾
+/关键字：按斜杠/键，可以输入想搜索的字符，然后确定进行搜索
+
+shift+insert 是粘贴
+tabs  是代码补全
+
+
+yum  安装卸载软件命令
+
+查找软件包命令 yum search java
+
+安装指定软件命令：yum install 安装包名
+
+yum remove 卸载软件
+yum list installed 列出所有软件安装包
+
+yum clean all 清除已安装软件包的下载谁的
+
+
+配置环境变量
+配置环境变量是在/etc目录下
+usr 这是一个非常得要的目录，用户的很多应用程序和文件都放在这个目录下，类似progamfiles
+
+在etc下的profile文件下配置如下代码
+
+export JAVA_HOME=/usr/local/jdk1.8.0_121
+
+修改过环境变量后执行下面的命令生效
+source /etc/profile
+
+启动程序命令
+./startup.sh    linux系统中启动程序统一用./
+
+
+mysql安装
+1\用 yum list installed | grep mariadb   --查询有没有安装mariadb
+有的话卸载  yum -y remove mariadb-libs.x86_64 
+
+2\解压mysql文件到 usr\local中
+3、改文件夹名称
+修改文件夹名称
+mv mysql-5.7.18.8-sdfsf  mysql-5.7.18  把文件夹名称改为mysql-5.7.18
+4、创建data文件夹
+5、创建用户 执行mysqld 命令,用户来执行mysql的命令mysqld,此命令用来初始化mysql基础信息
+     useradd mysql
+6、初始化mysql ,先进入到 mysql的Bin下再执行以下命令
+     ./mysqld --initialize --user=mysql --datadir=/usr/local/mysql-5.7.18/data --basedir=/usr/local/mysql-5.7.18
+     运行完后会出现root密码，要记住
+7、进行传输加密
+     ./mysql_ssl_rsa_setup --datadir=/usr/local/mysql-5.7.18/data
+     成功标志有+++表示成功
+8、修改mysql安装目录的权限
+     chown -r mysql:mysql /usr/local/mysql-5.7.18 / 
+     mysql:mysql  表示文件夹的所属用户，所属用户组
+     -r 表示递归，把文件夹下面的所有文件都给他	
+9、启动mysql  进入bin下面执行下面的命令
+    ./mysqld_safe & (其中 &符号表示后台启动）
+10、查看是否启动成功
+    ps -ef | grep mysql
+    如果出来多行带有mysql的信息表示启动成功
+
+11、使用mysql 客户端进入mysql数据库 ,进入bin执行下面命令
+./mysql -uroot -p
+
+12、修改root密码
+alter user 'root'@'localhost'identified by '123456';
+
+13、授权远程访问
+grant all privileges on *.* to root@'%' identified by '123456'
+14、更新权限信息
+flush privileges;
+
+
+查看防火墙状态：systemctl status firewalld
+让防火墙可用：systemctl enable firewalld
+让防火墙不可用：systemctl disable firewalld
+开启防火墙：systemctl start firewalld
+禁用防火墙：systemctl stop firewalld
+
+
+find / -name aa.txt  全盘查找aa.txt
+
+mv a b 更改文件名称 从 a到 b
+
+使用consul
+./consul agent -dev -ui -node=consul-dev -client=192.168.*.** #虚拟机ip
+
+
+
+
+
+[Unit]
+Description=The redis-server Process Manager
+After=syslog.target network.target
+ 
+[Service]
+Type=simple
+PIDFile=/var/run/redis_6379.pid
+ExecStart=/usr/local/redis/redis-server /usr/local/redis/redis.conf
+ExecReload=/bin/kill -USR2 $MAINPID
+ExecStop=/bin/kill -SIGINT $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+telnet 192.168.96.129 8080
+
+https://www.zdfans.com/html/21927.html
+
+cd /
+./home/progam/Goland-2021.1.2/bin/goland.sh
+
+GODEBUG='gctrace=1' ./GoTest  //查看内存使用
+go build -o GoTest && GODEBUG='gctrace=1' ./GoTest  //查看内存使用
+
+
+
+
+
+
+
+
+

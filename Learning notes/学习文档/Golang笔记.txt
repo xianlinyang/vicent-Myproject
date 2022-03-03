@@ -1,0 +1,214 @@
+yxl  1234  linux用户名和密码
+jetbrains-golang
+
+视频地址：https://www.bilibili.com/video/BV1ZU4y1W72B?p=38
+1、select 选择管道使用
+申请管道
+   c := make(chan bool, 100)
+   c <- 向管道中写入数据
+
+  data := <-c  从里面读出来数据赋值给data
+  
+for {
+    fmt.println('...监听中...')
+    select {
+	case data1 := <-chan1:
+		fmt.println("读取 chan1 管道的数据")
+	case data2:= <-chan2:
+		fmt.println("读取 chan2 管道的数据")
+	default:fmt.println("等待监听。。。")
+     }
+
+}
+
+
+make([]int, 5)  --分配长度为5的内存，默认是5个0在里面，可以再append
+
+
+--- sync.WaitGroup{} 用于阻塞同步计数
+func main() {
+	runtime.GOMAXPROCS(1)
+	wg := sync.WaitGroup{}
+	wg.Add(20)
+	for i := 0; i < 10; i++ {
+		go func() {
+			fmt.Println("i: ", i)
+			wg.Done()
+		}()
+	}
+	for i := 0; i < 10; i++ {
+		go func(i int) {
+			fmt.Println("i: ", i)
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
+}
+
+
+-----golang锁的使用，不加锁结果不等于100000 ，这里正确值应该是100000
+var mutex sync.Mutex
+var wg *sync.WaitGroup=new(sync.WaitGroup)
+var value int=0
+wg.Add(100)
+
+for i:=0;i<100;i++{
+   go func(){
+      for i:=0;i<1000;i++{
+         mutex.Lock()
+         value++
+         mutex.Unlock()
+      }
+      defer wg.Done()
+      }()
+}
+wg.Wait()
+fmt.Println(value)
+ 
+goroutine 协程 ，协程是运行在线程之上的，切换管理不依赖于os的process 和thread ,也不依赖cpu的核心数量，是由go运行时管理的
+                 使用方法在一个函数前台加上一个go关键字，这次调用就会在一个新的goroutine中并发执行，当被调用的函数返回时这个groutine也自动结束，
+                 如果这个函数有返回值，那么这个返回值会被丢弃
+go语方当Main函数返回时程序就退出，并且程序不等待其他goroutine结束
+并发编程的难度在于协调
+channel 是go语言在语言级别提供的goroutine间的通信方式,可以用channel在2个或多个goroutine之间传递消息
+channel是进程内的通信方式
+通过channel传递对象的过程等价于调用函数时的参数传递行为
+如果需要跨进程通信我们采用分布试系统比如socket,http
+channel是类型相关的，一个channeL只能传递一种类型的值，这个类型需要在申明channel时指定
+
+
+向channel中写入数据会导至程序阻塞，直到 有其他的goroutine从这个channel中读取数据
+channel读取时如果这个channel没有写入数据也会阻塞程序直到这个channel写入数据为止
+
+
+select  go语言直接在语言级别支持select关键字，用于处理异步io问题，用法与switch类似，由select开始一个新的选择块，每个选择条件由case语名来描术
+           且每个case语句里必须是一个channel操作
+
+缓冲机制   持续传递大量数据，创建一个带缓冲区的channel如  ch:=make(chan int,1024)  //这里的1024就是缓冲区大小
+
+
+
+
+
+consul作用是服务发现，通过服务发现记录的服务器信息回复一份其中一个满足条件的服务
+
+
+命令：ldd 项目名称，可以显示运行的时侯需要使用的动态库
+
+consul 命令
+
+consul agent -dev  --运行代理，在开发者模式下
+	     -h  查看参数
+                     -bind=0.0.0.0   指定consul所在机器的ip地址，默认值是0.0.0.0
+                     -http-port =8500 consul自带一个web外网房问的端口
+	     -client=127.0.0.1  表名哪些机器可以房问consul.  0.0.0.0表示所有机器都可以访问
+	     -config-dir=foo  所有主动注册的描述信息
+	     -data-dir=path 储存所有注册过来的svr机器的详细信息
+	     -dev 开发者模式，直接以默认配置启动consul
+ 	     -node=hostname	 服务发现的名字，可以是集群名
+	     -rejoin  consul启动的时侯，加入到的vonsul集群
+                     -server 以服务方式开启consul，允许其他的consul连接到 开启的consul上(形成集群）
+                                 如果不加-server，表示以客户端的方式开启，不能连接
+                    -ui         可以使用web页面来查看服务发现的详情 
+                   -bootstrap-expect 2 分布式里面的集群个数
+
+
+
+测试上述命令：
+    在终端中，键入：consul agent -server -bootstrap-expect 1 -data-dir d:/data-node=nl -bind=192.168.1.102 -ui -rejoin -config-dir=d:/data -client 0.0.0.0
+http://192.168.1.102:8500/
+consul members:查看集群中有多少个成员
+consul info:查看当前consul的ip信息。
+consul leave:优雅的关闭consul,ctrl-c不优雅的关
+Kill -9 65735  杀掉 id=65735的服务
+{
+	"service":{
+		"name":"Faceid",
+		"tags":["rails"],
+		"port":9000
+	}
+}
+ 
+fmt.sprintf("%06d",rand.Init31n(1000000))  --如果生成的随机数不足6位那么用6位补齐
+
+consul做做健康检查的必须是script,http,tcp,ttl中的任意一种
+
+
+微服务
+创建微服和：micro new --type srv bj38web/service/getcaptcha   ---在bj38web/service目录下创建一个getcaptcha微服务
+在micro中生成proto，直接进到 proto文件目录下 输入make 回车就好
+
+ctr+b 是进入函数或结构
+alter+enter 导入鼠标指定代码的包
+
+
+init 函数 ，如果存在导入的包没有使用的话类似于 _"runtime",那么init就会在main函数之前先被调用起来
+
+consul agent -server -bootstrap-expect 1 -data-dir d:/data -node=nl -bind=192.168.1.102 -ui -rejoin -config-dir=d:/data -client 0.0.0.0
+http://192.168.1.102:8500/
+
+
+golang切片  以下返回序号2到4内容，不包含4，即 3，4
+	var arr [5]int = [...]int {1, 2, 3, 4, 5}
+	var slice = arr[2:4]
+
+
+
+type Model struct {
+   gorm.model         //匿名参数表示要继承的类
+   Name   string
+}
+
+测试Orm生成出来的数据插入是否有创建时间
+
+
+
+ golang的堆栈
+栈：
+由操作系统自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。栈内存分配计算内置于cpu的指令集，效率很高，但是分配内存量有限。
+堆：
+就是通过new、malloc、realloc分配的内存块，编译器不会负责它们的释放工作，需要用程序区释放。
+
+这里不讲垃圾回收的机制
+先给出三个结论：
+golang的垃圾回收是针对堆的（垃圾回收都是针对堆的，这里只是做一个简单的证明）
+引用类型的全局变量内存分配在堆上，值类型的全局变量分配在栈上
+
+
+web框架一般都是使用的mvc架构
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ctrl+alt+L 是golang编译器的自动排版

@@ -1,0 +1,3 @@
+mkdir model  //创建文件夹
+cd model/     //进入目录
+vi aa.go         //创建go文件

@@ -1,0 +1,181 @@
+https://www.bilibili.com/video/BV1cK4y1L7Am?p=3        黑马程序员Kubernetes（K8S）教程，容器集群管理系统教程从入门到精通（新版）
+kubernetes.io
+Pod/pod  控制器
+常用pod控制器：deployment,Daemonset(每一个节点都会启一个)
+name/Namespace 命名空间
+label label选择器,一个标签可以对应多个资源，一个资源也可以对应多个标签
+service/ingress
+在k8s里，虽然每个Pod都会分配一个ip地址，但这个ip地址都会跟随pod的销毁而消失，每一次ip都会变
+一个service可以看作是一组pod的对外访问接口，不怕ip变化 
+
+
+master --节点中的管理者
+apiserver  对外的统一接口，接收用户命令
+scheduler  计算该由哪个节点干活
+controllermanager  管理工作人员，安排工作
+etcd       记录干活的人在干什么活，就是记录各节点的信息
+
+
+node  集群的数据平面，真正干活的
+kubelet   通过控制docker来更新销毁容器，用于发命令给docker来跑容器
+kubeproxy 负表提供集群内部的服务发现和负载均衡 ，相当于是外部访问docker里面的程序的访问入口
+
+master 集群控制节点
+node 工作节点，Master的任务会分配到这些节点
+pod kubernetes的最小控制单元
+controller   控制器，通过它来实现pod的管理，比如启动，停止
+service  pod对外服务的统一入口，可以通过这个service定义一个选择器选择连接哪一类的Pod
+label    标签，就是对Pod进行分类
+namespace  命名空间
+
+
+kubectl get pod                 查看所有pod
+kubectl get pod pod_name        查看某个pod
+kubectl get pod pod_name -o yaml  查看某个pod，以yaml格式展示结果
+kubectl get pod pod_name -o wide 更详细信息
+
+kubectl describe pod pod_name
+kubectl api-resources  --查看资源
+
+
+kubectl create namespace dev    --创建一个命名空间
+
+kubectl create -f nginex.yaml  --创建一个资源
+kubectl delete -f nginex.yaml
+
+kubectl get pod -n dev --show-labels
+
+
+
+kubectl describe pod -n kube-system
+kubectl get pod -n kube-system
+
+
+kubectl get pods nginx-6867cdf567-62htw -o jsonpath={.spec.containers[*].name}
+
+
+
+创建Pod:
+kubectl run nginx-deployment --image=nginx --port=80 --replicas=3
+kubectl delete deploy/nginx
+kubectl delete deploy/nginx-deployment
+
+kubectl delete deployment busy-deployment
+
+
+
+kubectl get node -o wide --show-labels
+
+ kubectl label nodes miwifi-r4cm-srv type=busybox  --给节点打标签
+ kubectl describe deployment busy-deployment
+
+
+ kubectl taint nodes -all node-role.kubernetes.io/master-   --解决master节点不能加Pod问题，提示是没有容忍仓
+ 
+ 
+ 
+ kubectl get pods -A
+ kubectl get namespaces
+ kubectl get deployments
+ kubectl delete ns kubernetes-dashboard  --删除命名空间
+ kubectl describe pod kubernetes-dashboard-56484d4c5-c4k2p -n  kubernetes-dashboard --查看Pod出错原因  
+ kubectl get svc -n kubernetes-dashboard                               
+
+
+ 安装dashboard
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+eyJhbGciOiJSUzI1NiIsImtpZCI6IjkzV3BjQVhMWXV1b1VDeVBxdTA2V3RVN2ZqbDhYYWxKYURpSzNkNGdyaWsifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZC10b2tlbi1obnByOCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImExZjc0MWI3LWRhMDktNDExZC05YTg2LTVmZGJhMjczOTYzYSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDprdWJlcm5ldGVzLWRhc2hib2FyZCJ9.e3WoyMu42cKJwLGnMVdoOkJG1akAermpUAcmcI8cF3um9PA1ZcqUdUr_g2zuUej9NoOzJm5i6XBqXQmVN-BVdHmXNRNbArujpSjRJuFZem0_0C1czx4fTu-rz8bshquqGbs6bjBtn6xPELneHC5tT7hLdU2mED4fCO4QjMiMPnYsh2gxUzhQbxOvT1KlU8_bgL7y3feFjPAqLj18JMOrn-aQ87GfxrekH9LvdIM5s_RrO3_D0H9V4Jb2DBAlh56XwTf9fRtUW-H6zPsc0DUG2e09etvzJZpdtoBEv9Q3-YtmYVGrAJNqSNbQF2s__qRj6FsmmgtDnHV9ZLffVYK_YQ
+ 
+ 
+ 
+
+kubectl get svc -A      --查看有端口
+
+https://www.bilibili.com/video/BV1Az4y1k7nn?from=search&seid=15753458346604117165&spm_id_from=333.337.0.0          kubernetes(k8s)部署Dashboard UI应用,无需翻墙，觉得不错记得收藏点赞哦
+
+
+
+kubeadm init \
+	--kubernetes-version=v1.17.4 \
+    --pod-network-cidr=10.244.0.0/16 \
+    --service-cidr=10.96.0.0/12 \
+    --apiserver-advertise-address=192.168.31.71
+    
+    
+    kubeadm init \
+	--kubernetes-version=v1.17.4 \
+    --pod-network-cidr=10.244.0.0/16 \
+    --service-cidr=10.96.0.0/12 \
+    --apiserver-advertise-address=192.168.31.71
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-deployment
+spec:
+  selector:
+    matchLabels:
+      app: busybox-deployment
+  replicas: 2
+  template:
+    metadata:
+      name: busybox
+      labels:
+        type: busybox
+    spec:
+      imagePullSecrets:
+      - name: myregistrykey
+      containers:
+      - name: busybox-c
+        image: busybox
+        imagePullPolicy: Always
+        
+        
+        
+        
+        
+        
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2
+  template:
+    metedata:
+      name: nginx
+      labels:
+        app: nginx
+    spec:
+      imagePullSecrets:
+      - name: myregistrykey
+      containers:
+      - name: nginx-c
+        image: nginx
+        imagePullPolicy: Always        

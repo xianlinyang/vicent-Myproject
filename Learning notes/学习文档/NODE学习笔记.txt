@@ -1,0 +1,6 @@
+NODE服务端启动方式 node openapp.js  --这个OPENAPP.JS 就是你的项目名称，相当于MAIN.JS的改名
+也可用点左下边的 NPM脚本下的START DEBUG开启或是START
+
+PM2  ，最好是用PM2命令来启动，这样程序出错时也不会崩溃
+
+GO也是可以在命令提示符下直接EXE名称打开EXE程序，如：直接输入 eam_server.exe 回车

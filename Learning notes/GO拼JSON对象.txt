@@ -1,0 +1,229 @@
+可以把json解析为map对象
+比如
+Plain Text code
+?
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+package main
+ 
+import (
+    "encoding/json"
+    "fmt"
+)
+ 
+func main()  {
+    jstr := `{"name":"张三","uno":"0001","data":[{"ip":"1","num":"11"},{"ip":"2","num":"22"}]}`
+    jmap := make(map[string]interface{})
+    json.Unmarshal([]byte(jstr), &jmap) //json转成map
+    dumpObj(jmap) //打印解析后的json对象
+}
+ 
+func dumpObj(obj interface{}) {
+    fmt.Printf("对象类型: %T\n", obj)
+    switch obj.(type) {
+    case map[string]interface{}: //如果是map类型
+        jmap := obj.(map[string]interface{})
+        for k, v := range jmap {
+            fmt.Printf("%v : %v\n", k, v) //打印map的key和value
+            if av, ok := v.([]interface{}); ok { //如果value是数组类型
+                for _, vv := range av {
+                    dumpObj(vv) //递归打印数组的每个元素
+                }
+            }
+            if mv, ok := v.(map[string]interface{}); ok { //如果value是map类型
+                dumpObj(mv)
+            }
+        }
+    default: //map以外的类型这里不做处理
+        fmt.Printf("map以外的类型，直接打印: %v\n", obj)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+不使用结构体也不是不行，就是有点繁琐
+给你个例子，自己参考修改吧
+Plain Text code
+?
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+package main
+ 
+import (
+    "database/sql"
+    "strings"
+    "strconv"
+    "fmt"
+    _ "github.com/go-sql-driver/mysql"
+)
+ 
+func main()  {
+    //连接数据库
+    db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/go?charset=utf8")
+    if err != nil {
+        fmt.Println("连接数据库失败", err.Error())
+        return
+    }
+    defer db.Close()
+ 
+    //查询数据库
+    query, err := db.Query("select * from your_table")
+    if err != nil {
+        fmt.Println("查询数据库失败", err.Error())
+        return
+    }
+    defer query.Close()
+ 
+    cols, _ := query.Columns() //主要是自己获取数据的字段名
+    scans := make([]interface{}, len(cols))
+    values := make([][]byte, len(cols)) //不特殊处理的数据都用byte数组，便于转成字符串
+    for i := range values { //scans和values绑定
+        scans[i] = &values[i]
+    }
+ 
+    jres := make([]string, 0) //最终结果，考虑到检索结果有多行，每一行是个json字符串
+    for query.Next() {
+        if err := query.Scan(scans...); err != nil {
+            fmt.Println(err)
+            return
+        }
+ 
+        row := make([]string, 0)
+        for k, v := range scans {
+            val := "";
+            switch v.(type) { //这里只处理int64，default都当作字符串，LZ自行根据数据的需求修改吧
+            case int64: //如果结果是int64类型
+                val = strconv.FormatInt(v.(int64), 10)
+            default: //其他类型直接保存为字符串
+                val = string(values[k])
+            }
+            // 以key:value的json形式保存，这里的key用的是数据库的字段名的小写
+            row = append(row, fmt.Sprintf("\":%s\":\"%s\"", strings.ToLower(cols[k]), val))
+        }
+        //每个字段用都好连接好，即变成 key1:value1,key2:value2...，然后以{}对象的形式保存到最终结果
+        jres = append(jres, fmt.Sprintf("{%s}", strings.Join(row, ",")))
+    }
+ 
+    fmt.Println(jres) //打印结果
+ 
+    db.Close() //用完关闭
+}

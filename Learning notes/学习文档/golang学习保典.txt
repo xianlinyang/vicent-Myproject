@@ -1,0 +1,143 @@
+1、切片问题
+2、defer问题
+3、go程捕捉不到另一个go程错误问题
+4、主go程退出子go程不会退出问题
+5、闭包变量使用问题
+6、同名变量问题
+7、go地址管理问题
+8、管道死锁问题
+9、go地址问题
+10、go锁概念，互拆锁，读写锁，也可以用channel来锁
+11、结构体比较
+12、变量的作用域
+
+int32,int64
+
+package mainfunc main() {    println(DeferFunc1(1)) println(DeferFunc2(1)) println(DeferFunc3(1))
+}func DeferFunc1(i int)(t int) {
+    t = i   deferfunc() {
+        t += 3
+    }() return t
+}
+funcDeferFunc2(i int)int {
+    t := i  deferfunc() {
+        t += 3
+    }() return t
+}
+funcDeferFunc3(i int)(t int) {   deferfunc() {
+        t += i
+    }() return2}
+
+解析
+考点:defer和函数返回值
+需要明确一点是defer需要在函数结束前执行。 函数返回值名字会在函数起始处被初始化为对应类型的零值并且作用域为整个函数 DeferFunc1有函数返回值t作用域为整个函数，在return之前defer会被执行，所以t会被修改，返回4; DeferFunc2函数中t的作用域为函数，返回1;DeferFunc3返回3
+————————————————
+版权声明：本文为CSDN博主「尹成」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/itcastcpp/article/details/80462619
+
+
+package main
+import (   
+       "errors"
+    "fmt")
+varErrDidNotWork = errors.New("did not work")
+funcDoTheThing(reallyDoItbool)(errerror) {    
+ifreallyDoIt {
+        result, err:= tryTheThing()        
+if err!= nil || result != "it worked" {
+           err = ErrDidNotWork
+        }
+    }    return err
+}
+functryTheThing()(string,error) {    
+return"",ErrDidNotWork
+}
+funcmain() {
+    fmt.Println(DoTheThing(true))
+    fmt.Println(DoTheThing(false))
+}
+
+解析
+考点：变量作用域
+因为 if 语句块内的 err 变量会遮罩函数作用域内的 err 变量，结果：
+————————————————
+版权声明：本文为CSDN博主「尹成」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/itcastcpp/article/details/80462619
+
+
+package main
+functest() []func() {    
+varfuns []func()
+    fori:=0;i<2;i++  {
+        funs = append(funs,func() {           
+           println(&i,i)
+        })
+    }    returnfuns
+}
+funcmain(){
+    funs:=test()    
+       for_,f:=range funs{
+        f()
+    }
+}
+
+解析
+考点：闭包延迟求值
+for循环复用局部变量i，每一次放入匿名函数的应用都是想一个变量。 结果：
+————————————————
+版权声明：本文为CSDN博主「尹成」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/itcastcpp/article/details/80462619
+
+
+package main
+functest(x int)(func(),func()) {    
+returnfunc() {       
+println(x)
+    x+=10
+    }, func() {       
+      println(x)
+    }
+}
+funcmain() {
+    a,b:=test(100)
+    a()
+    b()
+}
+
+解析
+考点：闭包引用相同变量*
+结果：
+————————————————
+版权声明：本文为CSDN博主「尹成」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/itcastcpp/article/details/80462619
+
+考点：panic仅有最后一个可以被revover捕获
+
+
+
+ex1:
+
+func f() (result int) {
+    defer func() {
+        result++
+    }()
+    return 0
+}
+ex2:
+
+func f() (r int) {
+     t := 5
+     defer func() {
+       t = t + 5
+     }()
+     return t
+}
+ex3:
+
+func f() (r int) {
+    defer func(r int) {
+          r = r + 5
+    }(r)
+    return 1
+}
+   

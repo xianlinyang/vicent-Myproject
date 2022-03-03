@@ -1,0 +1,4 @@
+cap     返回数组切片分配的空间大小
+unsafe.Pointer  不安全指针 unsafe.Pointer(&i)
+
+

@@ -1,0 +1,9 @@
+netstat -an　　显示出电脑中所有被打开的端口列表
+
+netstat -ano　　显示出所有占用端口的列表
+
+netstat -ano | findstr "80"　　显示出80端口占用的详细情况
+
+tasklist | findstr "680"　　　　查询端口具体哪个应用占用
+
+telnet 127.0.0.1 8383   查看端口是否打开

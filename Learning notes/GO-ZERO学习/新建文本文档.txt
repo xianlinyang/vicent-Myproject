@@ -1,0 +1,4 @@
+https://shangzhibo.tv/watch/10442818   //go-zero框架讲解，很细
+
+github上搜 kougazhang/go-zero-demo 这个是学习代码 ，这里面有说明文件有好多命令可以看
+以经下下来了，在gopath里的go-zero-demo-master 里

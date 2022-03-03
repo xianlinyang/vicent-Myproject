@@ -1,0 +1,34 @@
+--拆分商品 
+
+DECLARE @maxQty int;
+  SELECT @maxQty=MAX(qty) FROM #billofgoods_intf WHERE pState IN (0,3) AND qty > 1;
+  IF @maxQty > 1000 RAISERROR ('商品拆分数量太大', 11, 1);
+  DECLARE @ItemNos TABLE(itemno int);
+  INSERT INTO @ItemNos SELECT itemno from #billofgoods_intf WHERE pState IN (0,3) AND qty > 1;
+  WITH seqs AS(SELECT 1 seq UNION ALL SELECT seq+1 FROM seqs WHERE seq < @maxQty)
+    INSERT INTO #billofgoods_intf(itemno,spxxid,qty,kuanid,ppid,lbid,jjid,yearid,list_price,selling_price,vip_selling_price
+                                 ,price,offer_price
+                                 ,F_TypeID,CXMainID,CombinID
+                                 ,pState
+                                 ,pMsg)
+      SELECT itemno*10000+seq,spxxid,1,kuanid,ppid,lbid,jjid,yearid,list_price,selling_price,vip_selling_price
+                                     ,price,offer_price
+                                     ,F_TypeID,CXMainID,CombinID
+                                     ,pState
+                                     ,pMsg 
+        FROM  (SELECT * FROM #billofgoods_intf WHERE pState IN (0,3) AND qty > 1) t 
+              JOIN seqs ON t.qty >= seq;
+
+  UPDATE bog SET pState=4 FROM #billofgoods_intf bog JOIN @ItemNos i ON bog.itemno=i.itemno;
+
+
+----判断两个表的值存在就改不存在就插
+MERGE INTO WT_SALE AS T1         
+USING (                        
+SELECT   '687417146371751937' as pkid  ,   '10473' as erp_id    ,   null as deliverdeptcode  ,null as deptcode  , null as createdate  ,
+         'null' as sourcepkid  ) AS T2 ON    (T1.pkid=T2.pkid   and  T1.erp_id=T2.erp_id)
+		 WHEN NOT MATCHED THEN   
+			INSERT  ( pkid ,erp_id ,deliverdeptcode, deptcode , createdate ,sourcepkid )          
+		    VALUES  ( T2.pkid  ,  T2.erp_id , T2.deliverdeptcode  , T2.deptcode  , T2.createdate ,T2.sourcepkid )         
+	     WHEN MATCHED THEN         
+		 UPDATE SET T1.deliverdeptcode=T2.deliverdeptcode ,T1.deptcode=T2.deptcode  ,T1.createdate=T2.createdate ,T1.sourcepkid=T2.sourcepkid ;

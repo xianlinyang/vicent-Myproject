@@ -1,0 +1,18 @@
+https://www.bilibili.com/video/BV1ZU4y1577q?from=search&seid=15376063669376655231   //Go语言编写简单分布式系统（完结）
+
+https://www.bilibili.com/video/BV1A5411G7M2?p=2  MySql 分布式集群原理
+
+启动需要启动cmd里面的logservice
+
+gradingservice.main -->service.start-->(开启服务startservice)然后再调->registry.registerservice
+
+服务启动顺序： 1、gradingservice,logservice,Gradingservice
+
+
+Log服务启动--调用service.start开启和注册服务（
+
+	服务所有依赖会在add时全加进去存在provider中
+	service在add注册服务时会同时增加依赖服务，最终会调用providers.update来添加依赖服务
+	当按任意键退出服务时会再调update把依赖从provider中去掉
+	最终按心跳看看要不要接入需要的依赖
+）

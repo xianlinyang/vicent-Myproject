@@ -1,0 +1,193 @@
+
+docker安装
+1、yum 包更新到最新
+yum update
+
+2 安装需要的软件包，yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的
+yum install -y yum-utils device-mapper-persistent-data lvm2
+3设置yum源
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+4安装docker，出现办理入的界面都按 y
+yum install -y docker -ce
+
+5查看docker版本，验证是否验证成功
+docker -v
+
+
+
+
+
+
+
+https://www.bilibili.com/video/BV1CJ411T7BK?p=7&spm_id_from=pageDriver   黑马程序员Docker容器化技术，从零学会Docker教程
+docker  images  //查看本地镜像文件
+docker search redis  搜索redis镜像文件
+docker pull redis //下载redis   docker pull redis:3.2 指定版本
+hub.docker.com 、、docker的官方网站，是不是支持版本要到官方网站上去查有没有镜像
+docker rmi safsdfadafd  //删除镜像  后面跟image id 
+docker rmi redis:latest  //通过版本删
+docker images -q    //查看所有id
+docker rmi `docker imges -q`  //删除所有镜像  
+
+
+docker run -it --name=c1 centos:7 /bin/bash  // -i 表示保持一直运行  -t 给容器分配一个终端可以输入命令  --name 给容器取个名字  centos表示要创建
+  的镜像，7表示7版本  /bin/bash表示容器初始化
+  执行完后会自动进入docker容器内部
+
+exit 表示退出容器
+docker ps 表示查看现在正在运行的 容器
+docker ps -a  查看所有容器
+docker run -id --name = c2 centos:7  这样创建不直接进入容器，而且exit不退出容器
+docker exec -it c2 /bin/bash  进入c2容器   ,exit退出容器
+docker stop c2  关闭容器
+docker start c2 启动容器 
+docker rm c2  删除容器，后面跟容器id和名称都可以
+
+docker rm `-aq`  删除所有容器
+docker inspect   c2  --查看容器信息 
+
+命令没搞完时  敲 \ 线可以换行继续敲
+数据卷
+docker  run  -it --name =cl -v /root/data:/root/data_container centos:7 /bin/bash  //在创建容器时挂载数据卷目录,将容器的/root/data_container目录挂载到/root/data上，centos:7 /bin/bash  这个是镜像名称和版本号和初始化命令	 
+
+
+
+
+挂载容器，容器再挂载数据卷
+docker run -it --name=c3 -v /volume centos:7 /bin/bash   //这里创建一个volume容器目录
+
+docker run -it --name=c1 --volumes-from c3 centos:7 /bin/bash
+docker run -it --name=c2 --volumes-from c3 centos:7 /bin/bash  //c1,c2两个容器都挂载到c3容器上，他们都使用c3挂载的数据卷
+
+
+
+
+部署mysql
+1 docker search mysql
+2docker pull mysql:5.6
+3 docker run -id \
+-p 3307:3306 \                        ------将容器的3306端口映射到宿主机的3307端口
+-- name == c_mysql\
+-v $PwD/config:/etc/mysql/conf.d\  --将主机目录下的conf/my.cnf挂载到容器的/etc/mysql/my.cnf
+-v $Pwd/logs:/logs\   --将主机当前目录下的logs目录挂载到 容器的/logs,日志目录
+-v $PwD/data:/var/lib/mysql\  ---将主机当前目录下的data目录挂载到容器的/var/lib.mysql,数据目录
+- e MYSQL_ROOT_PASSWORD =123456\ mysql:5.6
+
+
+
+docker commit 容器id 镜像名称：版本号  --容器转为镜像
+docker save -o 压缩文件名称 镜像名称：版本号  --镜像文件压缩
+docker load -i 压缩文件名称  --通过压缩文件生成新的容器
+
+
+部署java包
+FROM java:8
+MAINTAINER itheima <sfdsfs@qq.com>
+ADD SFSFDF00.0.0.1.jar
+CMD java -jar app.jar
+
+
+docker build -f ./centos_dockerfile -t itheima_centos  . // 生成镜像文件 -f是dockerfile 文件所在目录  -t 是设置新的镜像名称   最后的点代表路径
+
+
+
+docker compose安装
+
+
+mkdir -p ./nginx/conf.d    父目录和子文件一起创建
+
+学到第22节
+
+
+--安装redis
+docker run -p 6381:6379 --name redis2 -v /usr/local/docker/redisconf:/etc/conf -v /usr/local/docker/data:/data -d redis  --appendonly yes
+
+redis-cli -h 192.168.96.129 -p 6381
+
+部署golang 二进制文件到docker
+
+ 1\  把go编译的main 二进制文件放到 目录下  运行 vim gotest_dockerfile  把下面内容填上
+FROM centos:latest
+
+LABEL cjl "cjl_spy@163.com"
+
+WORKDIR /home/DockerPro
+
+ADD ./main ./main
+
+EXPOSE 8080
+
+ENTRYPOINT  ["./main"]
+
+2、开始生成镜像，运行 docker build -f ./gotest_dockerfile -t gotest .
+3、载入镜像  docker run --name gotest -d -p 8080:8080 gotest
+
+
+
+-------------------------k8s
+
+vim/etc/exports
+/nfs *(rw,no_root_squash,no_all_squash,sync)
+
+systemctl start rpcbind
+systemctl start nfs
+
+mkdir /test
+showmount -e 192.168.11.100  --可以看到共享目录
+mount -t nfs 192.168.11.100:/nfs/test/  把nfs目录挂载至test目录下
+cd /test/
+umount/test/  --解除挂载
+
+mkdir pv
+cd pv
+vim pv.yaml
+kubectl create -f pv.yaml
+kubectl get pv
+
+
+pvc
+ 
+spec:里面的serviceName和无头服务的labels下的app里面的名称要一至，还有metadata里面的name
+下面的volumeclaimtemplates->metadata->name  里的名字和 spec->comtainers->volumemounts->name里面进行挂载要一样
+下面有挂载目录
+
+
+创建 pvc-statefulset
+vim pod.yaml  ,把yaml文件内容复制过去保存
+
+kubectl apply -f pod.yaml  ----创建Pod
+
+kubectl describe pod web-0   ---看日志
+
+ kubectl get pod -0 wide
+ 
+
+ mkdir /nfs{1..3}  //创建nfs1,nfs2,nfs3文件
+ chown nfsnobody  nfs1/ nfs2/ nfs3/
+ 
+ nfs--安装 
+ --服务端
+ apg-get install nfs-kernel-server
+ vi /etc/exports
+ 最后面添加,这个是添加共享目录的意思：/root *(rw,sync,no_root_squash,no_subtree_check)
+ ps ax |grep nfs   -----查找服务有没有启启来
+ 
+ 
+ 
+ 
+ 
+ ---------------------vim
+ cp /etc/host ./
+ 按e进行编辑
+ 按A进入插入模式
+ 普通模式下g进入文件头，G进入文件尾
+ 按x删除光标当前字符
+ dd 删除光标所在行
+ ndd n是行数 
+ u表示辙消上一次操作
+ yy表示复制当前行
+ p表示粘贴到当前行之前
+ P表示粘贴到当前行之后
+ yny表示复制n行
+ /+需要查找的内容
+ :s/需要替换的内容/替换后的内容

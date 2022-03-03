@@ -1,0 +1,107 @@
+shown                                                                      		              所示
+determine                                                               		             确定
+indication                                                             			      指示
+geographical                                                          			      地理
+features                                                                 				    特性
+performance 	美[pərˈfɔːrməns]					性能
+productivity  						生产力
+attempts							尝试
+incorrect							不正确
+verify 							验证
+occurred		美[əˈkɜːrd]					发生
+correctly			美[kəˈrɛktlɪ]					正确
+organize 							组织
+trash 							垃圾
+engage							参与
+Knowledge						知识
+Communities						社区
+resolving							解决
+trial 							试验
+repository						存储库
+privileges							特权
+compatible						兼容
+arguments 						参数
+
+visual studio code
+postmain
+submit
+
+
+
+
+
+
+
+
+
+
+stickers    贴纸
+Packet     包
+Transfer  转移
+favorites 最喜欢的，收藏
+Mute    沉默
+Notification  通知
+
+
+
+
+
+
+
+
+
+
+
+https://cdn.mysql.com//downloads/mysql-5.7/mysql-5.7.18-linux-glibc2.5-x86_64.tar.gz
+
+学完要记
+请求错误的几种类型
+session,cokie
+屏幕演讲软件
+注册阿里云平台账号
+
+redis 缓存数据几种存储方式 rdb默认存储方式(存储是默认的存储方式，小数量，不在乎是否有并发，数据是不会丢失，安全性最好，占用的空间也最小
+                                           aof（体积大，方式在分布式下，可应对大量数据处理问题，但也会存在数据丢失）
+                                           redis使用的索引是红黑树，红黑树索引要比b族索引效率要高一些，因为reids数据只支持key-value型所以可以用红黑树索引
+                                           而mysql不行，因为mysql是关系型数据库
+		           默认端口  6379
+                                           sudo redis-server /etc/redis/redis.conf   --启动redis数据库
+                                           ps xua | grep redis  验证有没启动
+			redis-cli -h 192.168.6.108 -p 6379  --连接redis
+			keys *  --查看已经存储的键值
+                                                get key hello  --查询hello的值
+			setex --expire   --设置键值对带保存时长，单位是秒级
+                                               set hit itcals  --插入一箱key =hit value=itcals的值
+                                               flushall  清空
+			
+ALTER USER root@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+
+create user 'admin'@'%'  identified WITH mysql_native_password by 'admin';
+grant all privileges on *.* to 'root'@'192.168.96.129' with grant option;
+
+怎么去搭建mysql数据库的主从备份
+怎么去搭建mysql的集群搭建
+mysql引勤  mysql5.5后才使用innerdb,也是默认引擎，
+                  innerdb支持行锁，以前只支持表锁，可提高并发性，支持事务，支持多索引，可以通过外键可以提高表与表的效率
+                              mysql是用的b+树索引，b+树索引和b族索引有什么区别
+                              支持多索引，支持外键
+                  mysam 表锁不支持事务，只支持单索引，不支持外键                     
+ 
+https://www.kancloud.cn/shuangdeyu/gin_book
+
+
+https://www.jetbrains.com
+需要xmanager来处理x11转发请求
+1、索引分为几类
+2、每一类的实现方式
+3、索引使用的结构默认的是b-tree,不是哈希（哈希虽然能快速定位但没有顺序不适合复杂查询）
+自增长列作为主键索引是效率最高的，因为数据的连续性不会存在分裂会大大减小移动的频率
+
+
+intelligent pinyin
+
+yum install ibus-libpinyin.x86_64
+
+export GOROOT=/usr/local/go  
+export GOPATH=/home/gocode  
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin

@@ -1,0 +1,4 @@
+vertical-align: 设置元素的垂直对齐方式（可以向上对齐向下对齐和向下对齐）
+display:-webkit-box
+-webkit-box-orient:vertical; //表示垂直自适应布局
+-webkit-line-clamp:2;// 表示只显示两行，多余用..显示

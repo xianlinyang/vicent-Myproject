@@ -1,0 +1,33 @@
+https://edu.51cto.com/course/20284.html
+
+https://www.bilibili.com/video/BV137411H7t9?from=search&seid=1305993254678155241  // 从0开始学习微服务框架
+
+https://www.bilibili.com/video/BV1ZU4y1W72B/?spm_id_from=trigger_reload  
+https://www.bilibili.com/video/BV1ZU4y1W72B?p=98   2021年Go语言零基础微服务项目   ----看到137    178
+
+
+
+
+
+github里搜 gin-contrlb 是gin框架官方支持的中间库
+
+
+https://ke.qq.com/course/3027229?taid=10095956287435037  --golang学习-并发编程
+https://ke.qq.com/course/2930362  --golang从入门到 精通 要收费
+看到 第10，从连接中读写数据，有点看不懂为什么连接能写入数据也能读出来
+
+微服务调用一般对内 rpc对外rest
+
+https://github.com/xinliangnote/Go   --------gin框架学习代码
+
+
+https://releases.hashicorp.com/consul
+
+
+go run 11-goroutin3.go > res   --命令不懂
+vi res
+
+
+1、写代码时在后面写。可以返回err信息
+
+
