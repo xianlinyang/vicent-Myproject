@@ -1,0 +1,25 @@
+// 在ioproject 项目 打包 执行文件
+// 上传192.168.100.250 root/auroratest/下  账号密码皆为root
+// 启动
+// 测试结果保存到 192.168.100.250 下的mongodb 内 
+
+mongodb 192.168.100.250:27017 无账号密码
+
+mongodb 数据库 
+leveldb_test 是第一版测试数据主要测 leveldb 
+storage_max_level_db 第一版levedb配置
+storage_max_wirtiger_db 第一版tiger配置
+
+config_table 是第二版配置库 主要文件大小和最大存储值
+
+wiredtiger_1_11 是2022年一月11号 做的测试主要是用于下载测试 但是由于wiredtiger(不分片) 版本未做持久化 仅仅结果在 iotest上传不关情况下 从0开始下载 前10个大概8s 最大值13s。 
+
+
+wiredtiger_test 不分片测试数据3.4t 下载时间无意义， 仅仅关注上传时间
+
+wiredtiger_test_1 该表数据是分片 3.8t 测结果数据 后续在停止aurora 后继续加到4t 但是没有持久化 后续数据没有意义
+
+wiredtiger_test_1g 1g测试数据不用管 没有意义
+
+
+ 

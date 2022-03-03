@@ -1,0 +1,27 @@
+# 数据库地址
+DB_HOST: "127.0.0.1"
+# 数据库账号
+DB_USER: "admin"
+# 数据库密码
+DB_PWD: "123456"
+# 数据库名称
+DB_NAME: "demo1"
+
+DRIVER_TABLE: "wt_db_3"
+# 配置数据表名
+
+DISK: "sda"
+
+# appPort
+APPPORT: ""
+URL: "http://127.0.0.1:1633/aurora"
+FILE_SIZE: "200m"
+
+# STOP_APP_SIZE 停止程序累计硬盘大小
+STOP_APP_SIZE: "200m"
+
+
+
+Time: "2"
+
+
