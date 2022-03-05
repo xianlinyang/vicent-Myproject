@@ -1,0 +1,4 @@
+mysql -u root -p   登陆
+desc table   查看table的结构
+show databases;
+show tables;
