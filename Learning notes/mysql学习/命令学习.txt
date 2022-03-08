@@ -2,3 +2,10 @@ mysql -u root -p   登陆
 desc table   查看table的结构
 show databases;
 show tables;
+
+Mysql默认的事务隔离级别是  repeatable-read 可重复读
+show variables like "transaction_isolation";  查看事务隔离级别  读未提交（read-uncommitted,不可重复读（read-committed）,可重复读（repeatable-read）,串行化（serializable）
+set session transaction isolation level read committed;  //设置本次会话事务级别是read-committed
+
+set global transaction isolation level read committed;    //全局设置事务隔离级别
+用 BEGIN, ROLLBACK, COMMIT来实现  事务
