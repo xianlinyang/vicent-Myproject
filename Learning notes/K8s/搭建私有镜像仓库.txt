@@ -76,21 +76,25 @@ docker pull golang:1.15.7-alpine3.13
 
 ----Dockerfile
 FROM golang:1.15.7-alpine3.13
-WORKDIR /go/src
-ADD ./go/src
-RUN cd /go/src && go build -0 main
-CMD ["/go/src/main"]
+WORKDIR /go/src             /////把docker里面的这个目录设为工作目录
+ADD ./go/src                   ///把这个src加上去
+RUN cd /go/src && go build -0 main        //对这个src进行编译
+CMD ["/go/src/main"]             ///下次运行容器时直接运行我这个编译好的
 
 
+//////视频地址  Docker Go 语言应用程序的编译与打包 - golang @docker Multi-stage build p.18    https://www.bilibili.com/video/BV1Jo4y117kM?from=search&seid=13521256691790901800&spm_id_from=333.337.0.0
 
+######分阶段构建
+
+#编译阶段
 FROM golang:1.15.7-alpine3.13 AS buildStage
-WORKDIR /go/src
-ADD ./go/src
-RUN cd /go/src && go build -o main
-
+WORKDIR /go/src   
+ADD ./go/src     
+RUN cd /go/src && go build -o main  
+#打包阶段
 FROM alpine:latest
 WORKDIR /app
-COPY --from=buildStage /go/src/main /app/
+COPY --from=buildStage /go/src/main /app/    /////从编译阶段的buildStage考备main到/app/下
 EXPOSE 8085
 ENTRYPOINT ./main
 
@@ -104,6 +108,9 @@ docker run -p 8085:8085 hello_world:v03     //这种是带端口映射的运行，不带端口映
 
 
 
+
+ENTRYPOINT   执行cmd命令  ENTRYPOINT [ "curl", "-s", "http://ip.cn" ]
+USER指令用于指定容器执行程序的用户身份，默认是 root用户。
 
 
 
