@@ -1,0 +1,86 @@
+视频地址：https://www.bilibili.com/video/BV1zJ411w7SV?p=5  尚硅谷Nginx教程由浅入深（一套打通丨初学者也可掌握）
+
+正向代理：客户端IE要配置代理服务器，通过访问代理服务器访问目标服务器
+反向代理：客户端通过配置代理服务器再由代理服务器转发到真实服务器，其目的是影藏真实服务器
+
+ps -ef |grep  nginx  查看nginx进程
+
+
+进入nginx的cd /usr/local/nginx/sbin 到这个目录才能使用nginx命令
+
+查看nginx版本   ./nginx -v
+启动           ./nginx  
+关闭            ./nginx -s stop
+重新加载nginx ,改了配置文件要重加载： ./nginx -s reload
+
+nginx配置文件
+1\合局块
+   从配置文件开始到events的内容
+   worker_processes  nginx 处理并发的值越大处理的越多
+2\events块
+    nginx服务器与用户网络的连接
+    worker_connections 1024     支持最大连接数是1024
+3\http块
+    服务器配置最频繁的部份
+    http
+    server
+        listen
+        
+        localtion  /  当路径有斜杠做的跳转
+        
+        
+配置反向代理
+server_name  改成服务器id
+localtion /{
+    proxy_pass  http://127.0.0.1:8080   //这个是设置转发路径
+}        
+
+
+根据不同路径跳转到不同端口
+再加一个server
+server{
+    listen  9001:
+    server_name 192.168.1.100
+    localtion ~ /edt/{
+        proxy_pass  http://localhost:8001;
+    }
+    localtion ~ /vod/{
+        proxy_pass  http://localhost:80002;
+    }
+}
+
+
+负载均衡配置
+//增加服务器的列表
+upstream myserver{
+    ip_hash;
+    server 115.28.52.63:8080 weight=1;      //weight是权重的意思，权重越高被分配的请求就越多
+    server 115.28.52.63:8081 weight=1;
+    #fair;
+}
+
+server{
+    localtion /{
+        proxy_pass http://myserver;    //这个是转到myserver里去了
+        proxy_connect_timeout 10;
+    }
+}
+
+
+ip_hash:每个ip的请求固定访问一个后端的方式，这样可以解决session
+fair:按后端的响应时间来分配，响应越短越优先分配
+
+
+keepalived  //配置Nginx主从服务器
+ym install keepalived -y  安装keepalived
+rpm -q -a keepalived   看看有没有安装上
+cd etc/keepalived    里面有个conf这个是配置文件
+
+ps -ef |grep  nginx 
+
+
+#!/bin/bash
+A=`ps -C bash --no-heading|wc -l`
+if [$A -eq 0];then
+    echo "s"
+fi
