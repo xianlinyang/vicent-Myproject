@@ -1,0 +1,10 @@
+傻白甜式-MySQL数据库备份与增量恢复
+https://www.bilibili.com/video/BV14L41157yi?spm_id_from=333.337.search-card.all.click
+
+【MySQL】binlog命令-增量备份恢复案例-引擎-事务-MySQL管理思想-集群读写分离高可用等
+https://www.bilibili.com/video/BV1nF411B7A7?p=2
+SHOW MASTER LOGS;
+SHOW MASTER STATUS;  //查看binlog的开始位置
+
+
+mysqlbinlog ../mysql8/data/binlog.000046 | mysql -uroot -p
